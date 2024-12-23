@@ -32,6 +32,8 @@ import {
 import Image from "next/image";
 import ImagePlaceholder from "@/public/images/no-car-image.svg";
 import { useSidebar } from "@/components/ui/sidebar";
+import { SiKakaotalk } from "react-icons/si";
+import { WhatsappShare } from "react-share-kit";
 
 enum BookingDialogState {
   Idle,
@@ -305,63 +307,75 @@ const CarsCalendar = ({ car, bookings }: Props) => {
               </div>
             </div>
 
-            <div className={"w-full flex items-center justify-end gap-4"}>
-              <Button
-                variant={"destructive"}
-                disabled={bookingDialogState != BookingDialogState.Idle}
-                onClick={async () => {
-                  if (!selectedBooking.current) return;
-                  setBookingDialogState(BookingDialogState.Deleting);
+            <div className={"w-full flex items-center justify-between gap-4"}>
+              <div className={"flex items-center justify-start gap-4"}>
+                <WhatsappShare
+                  url={`Description:\n${selectedBooking.current?.description}\n\nSummary:\n${selectedBooking.current?.summary}\n\nDates:\n${new Date(selectedBooking.current?.from ?? 0).toISOString().split("T")[0]} - ${new Date(selectedBooking.current?.to ?? 0).toISOString().split("T")[0]}`}
+                  size={36}
+                  borderRadius={10}
+                />
 
-                  const response = await DeleteBookingByID(
-                    selectedBooking.current,
-                  );
+                <SiKakaotalk className={"text-yellow-500 text-4xl/none"} />
+              </div>
 
-                  toast({
-                    variant:
-                      response.status == "error" ? "destructive" : "default",
-                    title: response.data,
-                  });
+              <div className={"flex items-center justify-end gap-4"}>
+                <Button
+                  variant={"destructive"}
+                  disabled={bookingDialogState != BookingDialogState.Idle}
+                  onClick={async () => {
+                    if (!selectedBooking.current) return;
+                    setBookingDialogState(BookingDialogState.Deleting);
 
-                  selectedBooking.current = null;
-                  setBookingDialogOpen(false);
-                  setBookingDialogState(BookingDialogState.Idle);
-                }}
-              >
-                {bookingDialogState == BookingDialogState.Deleting
-                  ? "Deleting..."
-                  : "Delete"}
-              </Button>
-              <Button
-                disabled={bookingDialogState != BookingDialogState.Idle}
-                onClick={async () => {
-                  if (!selectedBooking.current) return;
-                  setBookingDialogState(BookingDialogState.Updating);
+                    const response = await DeleteBookingByID(
+                      selectedBooking.current,
+                    );
 
-                  const response = await UpdateBookingByID({
-                    description: booking.description,
-                    summary: booking.summary,
-                    drop_image: booking.drop_image,
-                    pickup_image: booking.pickup_image,
-                    car_id: selectedBooking.current.car_id,
-                    id: selectedBooking.current.id,
-                  });
+                    toast({
+                      variant:
+                        response.status == "error" ? "destructive" : "default",
+                      title: response.data,
+                    });
 
-                  toast({
-                    variant:
-                      response.status == "error" ? "destructive" : "default",
-                    title: response.data,
-                  });
+                    selectedBooking.current = null;
+                    setBookingDialogOpen(false);
+                    setBookingDialogState(BookingDialogState.Idle);
+                  }}
+                >
+                  {bookingDialogState == BookingDialogState.Deleting
+                    ? "Deleting..."
+                    : "Delete"}
+                </Button>
+                <Button
+                  disabled={bookingDialogState != BookingDialogState.Idle}
+                  onClick={async () => {
+                    if (!selectedBooking.current) return;
+                    setBookingDialogState(BookingDialogState.Updating);
 
-                  selectedBooking.current = null;
-                  setBookingDialogOpen(false);
-                  setBookingDialogState(BookingDialogState.Idle);
-                }}
-              >
-                {bookingDialogState == BookingDialogState.Updating
-                  ? "Updating..."
-                  : "Update"}
-              </Button>
+                    const response = await UpdateBookingByID({
+                      description: booking.description,
+                      summary: booking.summary,
+                      drop_image: booking.drop_image,
+                      pickup_image: booking.pickup_image,
+                      car_id: selectedBooking.current.car_id,
+                      id: selectedBooking.current.id,
+                    });
+
+                    toast({
+                      variant:
+                        response.status == "error" ? "destructive" : "default",
+                      title: response.data,
+                    });
+
+                    selectedBooking.current = null;
+                    setBookingDialogOpen(false);
+                    setBookingDialogState(BookingDialogState.Idle);
+                  }}
+                >
+                  {bookingDialogState == BookingDialogState.Updating
+                    ? "Updating..."
+                    : "Update"}
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
