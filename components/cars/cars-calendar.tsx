@@ -220,7 +220,7 @@ const CarsCalendar = ({ car, bookings }: Props) => {
           if (!state) selectedBooking.current = null;
         }}
       >
-        <DialogContent className="w-full max-w-[90%] p-4 pt-6">
+        <DialogContent className="w-full max-w-[90%] lg:w-fit p-4 pt-6">
           <DialogHeader>
             <DialogTitle>Car Booking</DialogTitle>
             <DialogDescription>View, Edit or Delete Booking</DialogDescription>
@@ -281,7 +281,7 @@ const CarsCalendar = ({ car, bookings }: Props) => {
               <div className={"relative aspect-[1.2]"}>
                 <Image
                   src={
-                    selectedBooking.current?.drop_image_url.trim()
+                    selectedBooking.current?.drop_image_url?.trim()
                       ? selectedBooking.current?.drop_image_url
                       : ImagePlaceholder
                   }
@@ -294,7 +294,7 @@ const CarsCalendar = ({ car, bookings }: Props) => {
               <div className={"relative aspect-[1.2]"}>
                 <Image
                   src={
-                    selectedBooking.current?.pickup_image_url.trim()
+                    selectedBooking.current?.pickup_image_url?.trim()
                       ? selectedBooking.current?.pickup_image_url
                       : ImagePlaceholder
                   }
