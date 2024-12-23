@@ -31,6 +31,8 @@ export default function RootLayout({
         <main className={"w-full h-full flex-grow"}>{children}</main>
 
         <Toaster />
+
+        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
       </body>
     </html>
   );

@@ -308,14 +308,34 @@ const CarsCalendar = ({ car, bookings }: Props) => {
             </div>
 
             <div className={"w-full flex items-center justify-between gap-4"}>
-              <div className={"flex items-center justify-start gap-4"}>
+              <div className={"flex items-center justify-start gap-2"}>
                 <WhatsappShare
                   url={`Description:\n${selectedBooking.current?.description}\n\nSummary:\n${selectedBooking.current?.summary}\n\nDates:\n${new Date(selectedBooking.current?.from ?? 0).toISOString().split("T")[0]} - ${new Date(selectedBooking.current?.to ?? 0).toISOString().split("T")[0]}`}
                   size={36}
                   borderRadius={10}
                 />
 
-                <SiKakaotalk className={"text-yellow-500 text-4xl/none"} />
+                <SiKakaotalk
+                  className={"text-yellow-500 text-4xl/none cursor-pointer"}
+                  onClick={() => {
+                    // @ts-ignore
+                    const kakao = window.Kakao;
+                    if (!kakao) return;
+
+                    if (!kakao.isInitialized()) {
+                      kakao.init(process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY);
+                    }
+
+                    kakao.Share.sendDefault({
+                      objectType: "text",
+                      text: `Description:\n${selectedBooking.current?.description}\n\nSummary:\n${selectedBooking.current?.summary}\n\nDates:\n${new Date(selectedBooking.current?.from ?? 0).toISOString().split("T")[0]} - ${new Date(selectedBooking.current?.to ?? 0).toISOString().split("T")[0]}`,
+                      link: {
+                        webUrl: "https://developers.kakao.com",
+                        mobileWebUrl: "https://developers.kakao.com",
+                      },
+                    });
+                  }}
+                />
               </div>
 
               <div className={"flex items-center justify-end gap-4"}>
